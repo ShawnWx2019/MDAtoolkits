@@ -19,6 +19,7 @@
 #' }
 
 mda_data_org = function(compound_info, source = "CD") {
+  compound_info = as.data.frame(compound_info)
   ## org
   tryCatch({
     if(source == "CD") {
@@ -32,11 +33,11 @@ mda_data_org = function(compound_info, source = "CD") {
       )
     } else {
       data_info = data.frame(
-        Compound_ID = compound_info[1],
-        name = compound_info[2],
-        mf = compound_info[3],
-        mw = compound_info[4],
-        RT = compound_info[5],
+        Compound_ID = compound_info[,1],
+        name = compound_info[,2],
+        mf = compound_info[,3],
+        mw = compound_info[,4],
+        RT = compound_info[,5],
         Judge = ""
       )
     }
