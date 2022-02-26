@@ -153,6 +153,7 @@ mda_merge_info = function(orz_data,name2cid,pubchem_detail,pubchem_class,CTS_keg
     right_join(.,orz_data,by = c("query" = "name") ) %>% 
     left_join(CTS_kegg,by = c("InChIKey" = "InChIkey")) %>% 
     mutate(
+      MolecularFormula = gsub(" ","",MolecularFormula),
       MolecularWeight = as.numeric(MolecularWeight),
       mw = as.numeric(mw),
       Check_MF = case_when(

@@ -48,12 +48,12 @@ mda_CTS_kegg = function(query,type = "multiple") {
       select(InChIkey,KEGG)
     return(a)
   }
-  if (type == "single") {
+  if (type == "multiple") {
     Inchikey = query %>%
       mutate(url = paste0(CTS_url,InChIKey)) %>%
       filter(InChIKey != "NA") %>% 
       select(url) %>% unique()
-  } else if (type == "multiple"){
+  } else if (type == "single"){
     Inchikey = data.frame(
       url = paste0(url,query)
     )
