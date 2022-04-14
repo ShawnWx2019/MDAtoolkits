@@ -1,7 +1,6 @@
 
 # pubchem crawler -----------------------------------------------------------
 
-
 #' @title mda_pubchem_crawler.
 #' @description Get compound information according the cid by webchem.
 #' @author Shawn Wang <http://www.shawnlearnbioinfo.top>.

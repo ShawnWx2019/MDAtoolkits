@@ -1,0 +1,4 @@
+name: MAD-report
+description: >
+   A summary file of MAD analysis report.
+create_dir: FALSE

@@ -1,0 +1,179 @@
+---
+output:
+  html_document:
+    theme: "paper"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load packages, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(tidyverse)
+library(plotly)
+load("./DAM_result.rdata")
+```
+
+<img src="MDAtoolskits2.svg" style="80px">
+
+---
+
+<font color=salmon size = 2>
+***Produced by:** <font color=purple size=2.5>**M**</font>etabolomics <font color=purple size = 2.5>**D**</font>atabase <font color=purple size=2.5>**A**</font>nalysis toolkits. [<https://github.com/ShawnWx2019/MDAtoolkits/tree/master>](https://github.com/ShawnWx2019/MDAtoolkits/tree/master)*  
+***Contect me:** [shawndrive2019@126.com](shawndrive2019@126.com)*   
+***Location:** State Key Laboratory of Crop Stress Adaptation and Improvement, HENU, Kaifeng-Henan-China.*  
+***Lab:** Xuebin Zhang's Lab*
+</font>
+
+---
+
+<h1>
+<font color=green>**Report of Metabolite Accumulation Difference (MDA) Analysis**</font>
+</h1>
+<font color=#15C561>
+*[MDAtoolkits](https://github.com/ShawnWx2019/MDAtoolkits/tree/master) by [Shawn Wang](http://www.shawnlearnbioinfo.top)*  
+***Report generation time:** -- `r format(Sys.timezone())` -- `r format(Sys.time())`*
+</font>
+
+---
+
+###**<font color=#0EBE90>Parameters of DAM analysis</font>
+
+The Pairwised DAM analysis parameters are shown in the following table：  
+please check the parameters carefully.  
+
+* Indicates that the threshold is contribute to the DAM filter.
+
+How to understand VIP in ropls package: [opls: PCA, PLS(-DA) and OPLS(-DA) for multivariate analysis and feature selection of omics data](https://bioconductor.riken.jp/packages/3.8/bioc/vignettes/ropls/inst/doc/ropls-vignette.html#452_vip_from_opls_models)
+
+
+
+```{r Parameters, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(out_para,"html") %>% 
+  mutate(
+    value = case_when(
+      str_detect(value,"\\*") ~ cell_spec(value, "html", color = "red", bold = T),
+      TRUE ~ cell_spec(value, "html", color = "green", italic = T)
+    )
+  )
+
+```
+
+---
+
+###**<font color=#0EBE90>PCA and opls-da of test samples.</font>
+
+How to understand PCA biplot: [How to read PCA biplots and scree plots](https://blog.bioturing.com/2018/06/18/how-to-read-pca-biplots-and-scree-plots/)
+
+```{r pca, echo=FALSE, fig.height=7, fig.width=7, dpi = 300, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# pca
+if(isTRUE(Interactive)) {
+  fig <- plotly::plot_ly(pca_result$rotated,x = ~PC1,y = ~PC2,z = ~PC3,hovertext = rownames(pca_group),color = pca_group$group,colors = c("purple","gold"))
+  fig <- fig %>% add_markers()
+  fig <- fig %>% layout(scene = list(xaxis = list(title = 'PC1'),
+                                     yaxis = list(title = 'PC2'),
+                                     zaxis = list(title = 'PC3')))
+  fig
+} else {
+    suppressMessages(
+    biplot(
+      pcaobj = pca_result,
+      colby = "group",
+      hline = 0,vline = 0,pointSize = p_size,
+      title = "biplot",
+      subtitle = paste0(left, " vs " ,right),encircle = T,legendPosition = "top"
+    )
+  )
+}
+
+# opls-da
+plot(DAM_all$opls_out,parPaletteVc = c("purple", "gold"))
+
+
+```
+
+
+
+###**<font color=#0EBE90>DAM table with annotations</font>
+
+```{r DAM_tbl, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+DT::datatable(DAM_compounds.anno,extensions = c("SearchPanes", "Select",'Buttons',"Scroller"),rownames = F,caption = "DAM with annotations",
+              options = list(dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel', 'pdf', 'print',"searchPanes"),
+                             scrollX = T,scrolY = T,
+                             deferRender = TRUE,
+                             scrollY = 200,
+                             scroller = TRUE
+                             ))
+
+```
+
+
+---
+
+###**<font color=#0EBE90>The number of DAM at different type of threshold</font>
+
+```{r Upset, echo=FALSE, fig.height=6, fig.width=9,dpi=300, message=FALSE, warning=FALSE, paged.print=FALSE}
+ FvsH_upset = DAM_tbl_all %>% 
+    mutate(
+      log2fc = case_when(
+        abs(log2fc) >= 1 ~ 1,
+        TRUE ~ 0
+      ),
+      pvalue = case_when(
+        pvalue <= 0.05 ~ 1,
+        TRUE ~ 0
+      ),
+      FDR = case_when(
+        FDR <= 0.05 ~ 1,
+        TRUE ~ 0
+      ),
+      VIP = case_when(
+        VIP >= 1 ~ 1,
+        TRUE ~ 0
+      )
+    ) %>% 
+    column_to_rownames("CompoundID") %>% 
+    as.matrix()
+  
+  m = make_comb_mat(FvsH_upset)
+  ss = set_size(m)
+  cs = comb_size(m)
+  
+  ht = UpSet(
+    m,
+    set_order = order(ss),
+    comb_order = order(comb_degree(m), -cs),
+    top_annotation = HeatmapAnnotation(
+      "DM Intersections" = anno_barplot(
+        cs,
+        ylim = c(0, max(cs)*1.1),
+        border = FALSE, 
+        gp = gpar(fill = "salmon",alpha = 0.6), 
+        height = unit(4, "cm")
+      ),
+      annotation_name_side = "left", 
+      annotation_name_rot = 90
+    ),
+    left_annotation = rowAnnotation(
+      "DM number" = anno_barplot(-ss, 
+                                 baseline = 0,
+                                 border = FALSE, 
+                                 gp = gpar(fill = "cyan",alpha = 0.6), 
+                                 width = unit(4, "cm")
+      ),
+      set_name = anno_text(set_name(m), 
+                           location = 0.5, 
+                           just = "center",
+                           width = max_text_width(set_name(m)) + unit(4, "mm"))
+    ), 
+    right_annotation = NULL,
+    show_row_names = FALSE
+  )
+  
+  ht = draw(ht)
+
+```
+
+
+
