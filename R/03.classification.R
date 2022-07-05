@@ -13,7 +13,8 @@
 #' @importFrom tidyr pivot_wider drop_na
 #' @importFrom magrittr %>%
 #' @importFrom purrr map map_df
-#' @import classyfireR
+#' @importFrom crayon green bold italic red yellow
+#' @importFrom classyfireR get_classification
 #' @references See classyfireR https://github.com/aberHRML/classyfireR
 #' @export
 #' @examples  
@@ -30,6 +31,11 @@
 #' }
 
 mda_classfire = function(query,type = "multiple") {
+  #> message setting
+  msg_yes = green$bold$italic;
+  msg_no = red$bold$italic;
+  msg_warning = yellow$bold$italic;
+  message(msg_yes("Start analysis....\n Get compound classification by InChIkey. "))
   ## rebuild function for purrr 
   shawn_get_classification = function(id){
     Sys.sleep(0.1)

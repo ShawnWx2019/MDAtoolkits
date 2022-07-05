@@ -4,14 +4,14 @@
 \alias{mda_pubchem_crawler}
 \title{mda_pubchem_crawler.}
 \usage{
-mda_pubchem_crawler(cid_info, type = "multiple", multi_core = TRUE)
+mda_pubchem_crawler(cid_info, type = "multiple", core_num = 8)
 }
 \arguments{
 \item{cid_info}{'character' or 'data.frame'; For single cid, cid_info equals the pubchem CID, For multiple cid, cid_info is a dataframe generated from mda_get_cid.}
 
 \item{type}{"single','multiple';  For one compound or multiple compounds.}
 
-\item{multi_core}{'TRUE' or 'FALSE'; Run web crawler with multicore or not.}
+\item{core_num}{'numeric'; how many cores you want to use}
 }
 \value{
 pubchem_item An data frame about stored the pubchem information of input cids.

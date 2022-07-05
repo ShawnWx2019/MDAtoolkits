@@ -60,16 +60,17 @@ mda_data_org = function(compound_info, source = "CD") {
 #' @param data_info A vector or data.frame; For single compound, just set the compound name as data_info, for multipule compounds, use organized data by mda_data_org.
 #' @param match 'all','first'; Check webchem::get_cid match, return all matched cid or the first match, default 'all' .
 #' @param type 'multiple','single', For one compound or multiple compounds.
-#' @param multi_core 'TRUE' or 'FALSE'; Run web crawler with multicore or not. 
+#' @param core_num 'numeric'; how many cores you want to use
 #' @return cid_tbl A table which webchem::get_cid generated.
 #' @importFrom magrittr %>%
 #' @importFrom webchem get_cid
 #' @importFrom dplyr distinct
 #' @importFrom tidyr drop_na
 #' @importFrom future plan
-#' @importFrom progressr handlers progressor
+#' @importFrom progressr  progressor
 #' @importFrom furrr future_map_dfr
 #' @importFrom purrr map_df
+#' @importFrom crayon green bold italic red yellow
 #' @references See webchem https://github.com/ropensci/webchem
 #' @export
 #' @examples  
@@ -83,70 +84,78 @@ mda_data_org = function(compound_info, source = "CD") {
 #' # please wait for a while
 #' }
 
-mda_get_cid = function(data_info,type = "multiple",match = "all",multi_core = TRUE) {
-  ## get cid
-  cat("Start analysis")
-  shawn_get_cid = function(name) {
-    Sys.sleep(0.2)
-    p(sprintf("name=%s", name))
-    a = tibble(
-      query = name,
+mda_get_cid = function(data_info,type = "multiple",match = "all",core_num = 8) {
+  #> message setting
+  msg_yes = green$bold$italic;
+  msg_no = red$bold$italic;
+  msg_warning = yellow$bold$italic;
+  message(msg_yes("Start analysis....\n convert compound names to cid "))
+  #> functions
+  #> name2cid
+  name2cid_fun = function(x,y) {
+    cid_tbl = tibble(
+      query = x,
       cid = NA
     )
-    tryCatch({
-      a = get_cid(
-        query = name,
-        from = "name",
-        domain = "compound",
-        match = match 
-      )
-    },error=function(e) {
-      cat(paste0(name," no match results\n"))
-    }
+    tryCatch(
+      {
+        cid_tbl = get_cid(
+          query = x,
+          from = "name",
+          domain = "compound",
+          match = y
+        )
+      },error = function(e) {
+        message(msg_no(x," no match results\n"))
+      }
     )
-    return(a)
   }
-  ## run
-  if (type == "single") {
-    name = data_info
-    cid_tbl = shawn_get_cid(name)
-    return(cid_tbl)
-  } else if (type == "multiple" ){
-    if (colnames(data_info) == c("Compound_ID","name","mf","mw","RT","Judge") ) {
+  #> multicore webspider
+  multi_get_cid_fun = function(name_list) {
+    name <- name_list %>% pull(name)
+    p <- progressr::progressor(steps = length(name));
+    b = furrr::future_map_dfr(.x = name,.f = function(.x) {
+      Sys.sleep(0.1);
+      p()
+      a <- name2cid_fun(
+        x = .x,
+        y = match
+      )
+      return(a)
+    });
+    b <- b %>% filter(!is.na(cid))
+    return(b)
+  }
+  #> run single search
+  if(type == 'single') {
+    cid_tbl <- name2cid_fun(
+      x = data_info,
+      y = match
+    )
+    message(msg_yes("Done!"))
+  }
+  #> run multiple search
+  if(type == 'multiple') {
+    #> check format
+    if ("name" %in% colnames(data_info) ) {
       Name_clean = data_info %>% 
         select(name) %>% 
         distinct() %>% 
-        drop_na()
+        drop_na() %>% 
+        mutate(order = seq(1:nrow(.)))
     } else {
-      return()
-      cat("Error in input data infomation, please organization your data by MDAtoolkits::mda_data_org()!")
-    }
-    if (isTRUE(multi_core)) { 
-      future::plan("multisession")
-      handlers(global = T)
-      handlers("progress")
-      multi_cor_cid = function(xs){
-        p<- progressor(along = xs)
-        future_map_dfr(xs,shawn_get_cid) %>% 
-          filter(!is.na(cid))
-      }
-      cid_tbl = multi_cor_cid(Name_clean)
-    } else {
-      single_cor_cid = function(xs){
-        p<- progressor(along = xs)
-        purrr::map_df(xs,shawn_get_cid) %>% 
-          filter(!is.na(cid))
-      }
-      cid_tbl = single_cor_cid(Name_clean)
-    }
+      return();
+      message(msg_no('Error in input data infomation, please organization your data by MDAtoolkits::mda_data_org()!'))
+    } 
+    #> run
+    future::plan("multisession", workers = core_num)
+    with_progress({
+      cid_tbl = multi_get_cid_fun(name_list = Name_clean)
+    })
+    message(msg_yes("Done!"))
     return(cid_tbl)
-  } else {
-    return()
-    cat("Wrong type, Just accept 'single' or 'multiple'!")
   }
-  cat("Finish!")
 }
-
 
 #' @title shawn_get_cid_sh
 #' @description get cid for shinyapp
@@ -188,4 +197,5 @@ shawn_get_cid_sh = function(name,mod) {
   }
   return(a)
 }
+
 

@@ -4,10 +4,9 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
-#' @import DT
+#' @importFrom DT dataTableOutput
 #' @import stringr
 #' @import tidyverse
-#' @import colourpicker
 #' @import shinyjqui
 #' @import bslib
 #' @import shinymanager
@@ -110,7 +109,7 @@ credentials <- data.frame(
 app_ui <- secure_app(
   head_auth = tags$script(inactivity),theme = theme_code,
     navbarPage(
-    theme = theme,
+    theme = shiny::bootstrapLib(theme),
     title = div(
       tags$img(
         src = "https://shawnmagic-1257599720.cos.ap-chengdu.myqcloud.com/MDAtoolskits2.svg",

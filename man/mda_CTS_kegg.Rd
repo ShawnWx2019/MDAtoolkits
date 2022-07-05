@@ -4,12 +4,14 @@
 \alias{mda_CTS_kegg}
 \title{mda_CTS_kegg.}
 \usage{
-mda_CTS_kegg(query, type = "multiple")
+mda_CTS_kegg(query, type = "multiple", core_num = 8)
 }
 \arguments{
 \item{query}{'character' or 'data.frame'; For single InChiKey, query equals the InChiKey, For multiple InChiKeys, query is a data frame from mda_pubchem_crawler.}
 
 \item{type}{"single','multiple';  For one compound or multiple compounds.}
+
+\item{core_num}{'numeric'; how many cores you want to use}
 }
 \value{
 KEGGID InChikey 2 kegg cid.

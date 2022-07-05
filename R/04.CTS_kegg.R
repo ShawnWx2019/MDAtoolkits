@@ -8,6 +8,7 @@
 #' \email{shawnwang2016@@126.com}
 #' @param query 'character' or 'data.frame'; For single InChiKey, query equals the InChiKey, For multiple InChiKeys, query is a data frame from mda_pubchem_crawler.
 #' @param type "single','multiple';  For one compound or multiple compounds.
+#' @param core_num 'numeric'; how many cores you want to use
 #' @return KEGGID InChikey 2 kegg cid.
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_split str_extract
@@ -15,6 +16,7 @@
 #' @importFrom dplyr mutate select
 #' @importFrom future plan
 #' @importFrom furrr future_map_dfr
+#' @importFrom crayon green bold italic red yellow
 #' @export
 #' @examples 
 #' \dontrun{
@@ -31,11 +33,15 @@
 #' kegg = mda_CTS_kegg(query = final_tbl,type = "multiple)
 #' }
 
-mda_CTS_kegg = function(query,type = "multiple") {
+mda_CTS_kegg = function(query,type = "multiple",core_num = 8) {
+  #> message setting
+  msg_yes = green$bold$italic;
+  msg_no = red$bold$italic;
+  msg_warning = yellow$bold$italic;
+  message(msg_yes("Start analysis... Get KEGG annotation via InChIKey. "))
   CTS_url = "https://cts.fiehnlab.ucdavis.edu/rest/convert/InChIKey/KEGG/"
   ## get kegg via InChikey
   InChikey2kegg = function(url){
-    Sys.sleep(0.5)
     a = read_html(url) %>%
       html_nodes("p") %>% html_text() %>%
       gsub(pattern = '\"',replacement = "",x = .) %>%
@@ -48,6 +54,20 @@ mda_CTS_kegg = function(query,type = "multiple") {
       select(InChIkey,KEGG)
     return(a)
   }
+  InChikey2kegg_run = function(para_url) {
+    p <- progressr::progressor(steps = length(para_url));
+    b = furrr::future_map_dfr(.x = para_url,.f = function(.x) {
+      Sys.sleep(0.5)
+      p()
+      a <- tryCatch({
+        InChikey2kegg(url = .x)
+      },error = function(e) {
+        message(msg_no('Failed'))
+      })
+      return(a)
+    })
+    return(b)
+  }
   if (type == "multiple") {
     Inchikey = query %>%
       mutate(url = paste0(CTS_url,InChIKey)) %>%
@@ -59,8 +79,12 @@ mda_CTS_kegg = function(query,type = "multiple") {
     )
   }
   Inchikey = Inchikey$url
-  future::plan("multisession")
-  KEGGID = future_map_dfr(Inchikey,tryCatch({InChikey2kegg},error = function(e) { print("failed")}))
+  future::plan("multisession",workers = core_num)
+  with_progress({
+    KEGGID = InChikey2kegg_run(para_url = Inchikey)
+  }
+  )
+  message(msg_yes("Done!"))
   return(KEGGID)
 }
 

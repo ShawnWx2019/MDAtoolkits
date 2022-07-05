@@ -3,12 +3,10 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import shinyjs
-#' @import DT
+#' @importFrom DT dataTableOutput
 #' @import stringr
 #' @import tidyverse
 #' @import tidyr
-#' @import colourpicker
 #' @import shinyjqui
 #' @import bslib
 #' @import shinymanager
@@ -17,7 +15,7 @@
 #' @import furrr
 #' @import progress
 #' @import shinyWidgets
-#' @import classyfireR
+#' @importFrom classyfireR get_classification
 #' @noRd
 
 
