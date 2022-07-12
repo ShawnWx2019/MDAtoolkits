@@ -58,7 +58,7 @@ mda_classfire = function(query,type = "multiple") {
     } else {
       tmp_x = classification(x) %>% 
         mutate(InchIkeys = gsub("InChIKey=","",meta(x)$inchikey)) %>% 
-        select(InchIkeys,Level,Classification)
+        dplyr::select(InchIkeys,Level,Classification)
     }
     return(tmp_x)
   }
