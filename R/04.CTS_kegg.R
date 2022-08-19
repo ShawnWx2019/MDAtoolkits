@@ -18,20 +18,6 @@
 #' @importFrom furrr future_map_dfr
 #' @importFrom crayon green bold italic red yellow
 #' @export
-#' @examples 
-#' \dontrun{
-#' # import file
-#' xx <- read.csv("cd_result.csv")
-#' # data orgnazation
-#' orz_data = mda_data_org(compound_info = xx, source = "CD")
-#' # Get cid (batch)
-#' name2cid = mda_get_cid(data_info = orz_data)
-#' # please wait for a while
-#' pubchem_detail = mda_pubchem_crawler(cid_info = name2cid,type = "multiple",multi_core = T)
-#' pubchem_class = mda_classfire(query = pubchem_detail,type = "multiple")
-#' final_tbl = mda_merge_info(orz_data,name2cid,pubchem_detail,pubchem_class)
-#' kegg = mda_CTS_kegg(query = final_tbl,type = "multiple)
-#' }
 
 mda_CTS_kegg = function(query,type = "multiple",core_num = 8) {
   #> message setting

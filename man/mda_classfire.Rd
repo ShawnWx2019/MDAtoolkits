@@ -17,20 +17,6 @@ pubchem_item An data frame about stored the pubchem information of input cids.
 \description{
 Compound classification via classyfireR
 }
-\examples{
- 
-\dontrun{
-# import file
-xx <- read.csv("cd_result.csv")
-# data orgnazation
-orz_data = mda_data_org(compound_info = xx, source = "CD")
-# Get cid (batch)
-name2cid = mda_get_cid(data_info = orz_data)
-# please wait for a while
-pubchem_detail = mda_pubchem_crawler(cid_info = name2cid,type = "multiple",multi_core = T)
-pubchem_class = mda_classfire(query = pubchem_detail,type = "multiple")
-}
-}
 \references{
 See classyfireR https://github.com/aberHRML/classyfireR
 }

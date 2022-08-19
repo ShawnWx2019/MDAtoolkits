@@ -17,18 +17,6 @@
 #' @importFrom classyfireR get_classification
 #' @references See classyfireR https://github.com/aberHRML/classyfireR
 #' @export
-#' @examples  
-#' \dontrun{
-#' # import file
-#' xx <- read.csv("cd_result.csv")
-#' # data orgnazation
-#' orz_data = mda_data_org(compound_info = xx, source = "CD")
-#' # Get cid (batch)
-#' name2cid = mda_get_cid(data_info = orz_data)
-#' # please wait for a while
-#' pubchem_detail = mda_pubchem_crawler(cid_info = name2cid,type = "multiple",multi_core = T)
-#' pubchem_class = mda_classfire(query = pubchem_detail,type = "multiple")
-#' }
 
 mda_classfire = function(query,type = "multiple") {
   #> message setting
@@ -68,21 +56,29 @@ mda_classfire = function(query,type = "multiple") {
   } else {
     InchIKeys = query$InChIKey
   }
-  tryCatch(
-    {
-      cat("Start processsing...")
-      classification_list = map(InchIKeys,shawn_get_classification)
-      # convert as classyfireR2tbl
-      result_tbl = purrr::map_df(classification_list,classfireR2tbl)
-      # convert long table to wide table
-      class_out = bind_rows(result_tbl) %>% 
-        drop_na() %>% unique() %>% 
-        pivot_wider(names_from = Level,values_from = Classification) 
-      return(class_out)
-    },error = function(e) {
-      cat("Please check internet connection!")
-    }
-  )
+  # tryCatch(
+  #   {
+  #     cat("Start processsing...")
+  #     classification_list = map(InchIKeys,shawn_get_classification)
+  #     # convert as classyfireR2tbl
+  #     result_tbl = purrr::map_df(classification_list,classfireR2tbl)
+  #     # convert long table to wide table
+  #     class_out = bind_rows(result_tbl) %>%
+  #       drop_na() %>% unique() %>%
+  #       pivot_wider(names_from = Level,values_from = Classification)
+  #   },error = function(e) {
+  #     cat("Please check internet connection!")
+  #   }
+  # )
+  cat("Start processsing...")
+  classification_list = map(InchIKeys,shawn_get_classification)
+  # convert as classyfireR2tbl
+  result_tbl = purrr::map_df(classification_list,classfireR2tbl)
+  # convert long table to wide table
+  class_out = bind_rows(result_tbl) %>%
+    drop_na() %>% unique() %>%
+    pivot_wider(names_from = Level,values_from = Classification)
+  return(class_out)
 }
 
 
