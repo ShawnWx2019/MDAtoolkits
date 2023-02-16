@@ -61,6 +61,7 @@ mda_data_org = function(compound_info, source = "CD") {
 #' @param match 'all','first'; Check webchem::get_cid match, return all matched cid or the first match, default 'all' .
 #' @param type 'multiple','single', For one compound or multiple compounds.
 #' @param core_num 'numeric'; how many cores you want to use
+#' @param from 'character'; see webchem::get_cid
 #' @return cid_tbl A table which webchem::get_cid generated.
 #' @importFrom magrittr %>%
 #' @importFrom webchem get_cid
@@ -84,7 +85,7 @@ mda_data_org = function(compound_info, source = "CD") {
 #' # please wait for a while
 #' }
 
-mda_get_cid = function(data_info,type = "multiple",match = "all",core_num = 8) {
+mda_get_cid = function(data_info,type = "multiple",match = "all",core_num = 8,from="name") {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;
@@ -101,7 +102,7 @@ mda_get_cid = function(data_info,type = "multiple",match = "all",core_num = 8) {
       {
         cid_tbl = get_cid(
           query = x,
-          from = "name",
+          from = from,
           domain = "compound",
           match = y
         )

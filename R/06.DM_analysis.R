@@ -15,7 +15,7 @@
 #' @importFrom purrr map2_chr
 #' @importFrom crayon green red blue yellow
 #' @importFrom ropls opls getVipVn 
-#' @importFrom rstatix t_test 7
+#' @importFrom rstatix t_test
 #' @export
 #' @examples 
 #' \dontrun{

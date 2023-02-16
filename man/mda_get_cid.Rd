@@ -4,7 +4,13 @@
 \alias{mda_get_cid}
 \title{mda_get_cid}
 \usage{
-mda_get_cid(data_info, type = "multiple", match = "all", core_num = 8)
+mda_get_cid(
+  data_info,
+  type = "multiple",
+  match = "all",
+  core_num = 8,
+  from = "name"
+)
 }
 \arguments{
 \item{data_info}{A vector or data.frame; For single compound, just set the compound name as data_info, for multipule compounds, use organized data by mda_data_org.}
@@ -14,6 +20,8 @@ mda_get_cid(data_info, type = "multiple", match = "all", core_num = 8)
 \item{match}{'all','first'; Check webchem::get_cid match, return all matched cid or the first match, default 'all' .}
 
 \item{core_num}{'numeric'; how many cores you want to use}
+
+\item{from}{'character'; see webchem::get_cid}
 }
 \value{
 cid_tbl A table which webchem::get_cid generated.
