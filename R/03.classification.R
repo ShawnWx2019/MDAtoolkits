@@ -14,7 +14,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom purrr map map_df
 #' @importFrom crayon green bold italic red yellow
-#' @importFrom classyfireR get_classification
+#' @importFrom classyfireR get_classification classification
 #' @references See classyfireR https://github.com/aberHRML/classyfireR
 #' @export
 
