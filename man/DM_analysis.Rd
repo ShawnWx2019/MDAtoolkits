@@ -38,7 +38,7 @@ Different accumulation analysis
 \examples{
 \dontrun{
 # set param
-mat = step7_result \%>\% select("Compound_ID",starts_with("sample")) \%>\% as.matrix
+mat = step7_result \%>\% select("CompoundID",starts_with("sample")) \%>\% as.matrix
 left_index = c("sample_01","sample_02","sample_03")
 right_index = c("sample_04","sample_05","sample_06")
 left = "case"

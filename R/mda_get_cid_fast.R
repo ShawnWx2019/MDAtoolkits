@@ -13,8 +13,8 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom future plan
 #' @importFrom progressr  progressor
-#' @importFrom furrr future_map_dfr
-#' @importFrom purrr map_df
+#' @importFrom furrr future_map2_dfr
+#' @importFrom purrr map_df map2_df
 #' @importFrom crayon green bold italic red yellow
 #' @references See webchem https://github.com/ropensci/webchem
 #' @export
@@ -66,10 +66,11 @@ mda_get_cid_fast = function(data_info,type = "multiple",core_num = 8) {
   #> multicore webspider
   multi_get_cid_fun = function(name_list) {
     x <- name_list %>% pull(query)
-    p <- progressr::progressor(steps = length(x));
-    b = furrr::future_map_dfr(.x = x,.f = function(.x) {
+    p <- progressr::progressor(along = x);
+    round_n = length(x);
+    b = furrr::future_map2_dfr(.x = x,.y = c(1:round_n),.f = function(.x,.y) {
       Sys.sleep(0.1);
-      p()
+      p(sprintf("%s",paste0(.x,"(",.y,"/",round_n,")")))
       a <- name2cid_fun(
         x = .x
       )

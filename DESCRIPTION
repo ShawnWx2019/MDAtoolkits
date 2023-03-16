@@ -1,6 +1,6 @@
 Package: MDAtoolkits
 Title: MDAtoolkits
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Shawn",
            family = "Wang",
@@ -26,6 +26,7 @@ Imports:
     furrr,
     stringr,
     rvest,
+    XML,
     progressr,
     progress,
     future,

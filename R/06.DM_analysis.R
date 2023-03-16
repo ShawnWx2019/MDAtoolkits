@@ -15,12 +15,12 @@
 #' @importFrom purrr map2_chr
 #' @importFrom crayon green red blue yellow
 #' @importFrom ropls opls getVipVn 
-#' @importFrom rstatix t_test
+#' @importFrom rstatix t_test anova_test
 #' @export
 #' @examples 
 #' \dontrun{
 #' # set param
-#' mat = step7_result %>% select("Compound_ID",starts_with("sample")) %>% as.matrix
+#' mat = step7_result %>% select("CompoundID",starts_with("sample")) %>% as.matrix
 #' left_index = c("sample_01","sample_02","sample_03")
 #' right_index = c("sample_04","sample_05","sample_06")
 #' left = "case"
@@ -52,7 +52,7 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
     summarise(mean = mean(Peak),.groups = "drop_last") %>% 
     pivot_wider(names_from = Sample,values_from = mean)
   # get.Test
-
+  
   if (method == "t-test") {
     mat %>%
       rownames_to_column("CompoundID") %>%
@@ -117,8 +117,11 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
       mutate(log2fc = log2(left/right))
     colnames(Diff_result_clean)[c(2,3)] = c(left,right)
   } else {
-    VIP= ropls::getVipVn(opls_da) %>% as.data.frame()
-    Diff_result_all$VIP = VIP$.
+    VIP= ropls::getVipVn(opls_da) %>% as.data.frame() %>% setNames('VIP') %>% 
+      rownames_to_column("CompoundID")
+    Diff_result_all <- 
+      Diff_result_all %>% 
+      left_join(.,VIP,by = "CompoundID")
     Diff_result_clean = data.frame(
       CompoundID = Diff_result_all$CompoundID,
       left = mean_mat$left,
