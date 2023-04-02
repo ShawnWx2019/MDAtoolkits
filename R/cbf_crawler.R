@@ -37,6 +37,7 @@ cbf_crawler <- function(query,delay_max = 1) {
   #> functions
   #> Get information
   get_cbf <- function(InChIKey) {
+    InChIKey.raw <- InChIKey
     url_raw = "https://cfb.fiehnlab.ucdavis.edu/entities/"
     url = paste0(url_raw,InChIKey,".json")
     xx <- RCurl::getURL(url = url)
@@ -68,7 +69,7 @@ cbf_crawler <- function(query,delay_max = 1) {
       {return("NA")}
     })
     x_df <- data.frame(
-      InChIKey = df_out[[1]],
+      InChIKey = InChIKey.raw,
       kingdom = df_out[[2]],
       superclass = df_out[[3]],
       class = df_out[[4]],
