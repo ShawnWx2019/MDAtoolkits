@@ -145,6 +145,7 @@ classfireR2tbl = function(x){
 #' pubchem_class = mda_classfire(query = pubchem_detail,type = "multiple")
 #' final_tbl = mda_merge_info(orz_data,name2cid,pubchem_detail,pubchem_class)
 #' }
+#' 
 
 mda_merge_info = function(orz_data,name2cid,pubchem_detail,pubchem_class,CTS_kegg){
   name2cid$cid = as.character(name2cid$cid)
@@ -179,42 +180,6 @@ mda_merge_info = function(orz_data,name2cid,pubchem_detail,pubchem_class,CTS_keg
 }
 
 
-#' @title mda_tbl_merge
-#' @description Merge two tables for shinyapp
-#' @author Shawn Wang <http://www.shawnlearnbioinfo.top>.
-#' \email {shawnwang2016@@126.com}.
-#' @param tbl1 'dataframe'; table1.
-#' @param tbl2 'dataframe'; table2.
-#' @param col1 'character'; Key column name for table1.
-#' @param col2 'character'; Key column name for table2.
-#' @param method 'character'; left_join, right_join, inner_join or full_join.
-#' @references https://github.com/gadenbuie/tidyexplain#relational-data
-#' @importFrom dplyr mutate left_join right_join inner_join full_join
-#' @importFrom magrittr %>%
-#' @export
-#' @examples  
-#' \dontrun{
-#' newtbl = mda_tbl_merge(tbl1 = orz_data,tbl2 = name2cid,col1 = "query",col2 = "name")
-#' }
-
-
-mda_tbl_merge = function(tbl1,tbl2,col1,col2,method) {
-  if (method == "left") {
-    tbl_out = left_join(tbl1,tbl2,by = c(col1 = col2)) 
-    return(tbl_out)
-  } else if(method == "right") {
-    tbl_out = right_join(tbl1,tbl2,by = c(col1 = col2))
-    return(tbl_out)
-  } else if(method == "inner") {
-    tbl_out = inner_join(tbl1,tbl2,by = c(col1 = col2))
-    return(tbl_out)
-  } else if(method == "full") {
-    tbl_out = full_join(tbl1,tbl2,by = c(col1 = col2))
-    return(tbl_out)
-  } else {
-    cat("Please check your input, pay attention to case sensitivity!")
-  }
-}
 
 
 
