@@ -34,6 +34,7 @@ pubchem_detail = mda_pubchem_crawler(cid_info = name2cid,type = "multiple",multi
 pubchem_class = mda_classfire(query = pubchem_detail,type = "multiple")
 final_tbl = mda_merge_info(orz_data,name2cid,pubchem_detail,pubchem_class)
 }
+
 }
 \author{
 Shawn Wang <http://www.shawnlearnbioinfo.top>.

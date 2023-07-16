@@ -133,7 +133,15 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
       mutate(log2fc = log2(left/right))
     colnames(Diff_result_clean)[c(2,3)] = c(left,right)
   }
-  
+  Diff_result_clean <-
+    Diff_result_clean %>% 
+    mutate(
+      log2fc = case_when(
+        log2fc == Inf ~ 10,
+        log2fc == -Inf ~ -10,
+        TRUE ~ log2fc
+      )
+    )
   
   ## get vip
   outfile = list(
