@@ -29,7 +29,7 @@
 #' pubchem_detail = mda_pubchem_crawler(cid_info = name2cid,type = "multiple",multi_core = T)
 #' }
 
-mda_pubchem_crawler = function(cid_info,type = "multiple",core_num = 8) {
+mda_pubchem_crawler = function(cid_info,type = "multiple",core_num = 1) {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;

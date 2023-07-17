@@ -4,7 +4,7 @@
 #' @description Get kegg cid by kegg website
 #' @author Shawn Wang <http://www.shawnlearnbioinfo.top>.
 #' \email{shawnwang2016@@126.com}
-#' @param query 'character' or 'data.frame'; For single InChiKey, query equals the InChiKey, For multiple InChiKeys, query is a single column of input, InChIKey or name.
+#' @param query 'character' ; compound names.
 #' @param type "single','multiple';  For one compound or multiple compounds.
 #' @param core_num 'numeric'; how many cores you want to use
 #' @return KEGGID compound name 2 kegg cid.
@@ -17,7 +17,7 @@
 #' @importFrom furrr future_map_dfr
 #' @importFrom crayon green bold italic red yellow
 #' @export
-mda_name2kegg <- function(query,type = "multiple",core_num = 8){
+mda_name2kegg <- function(query,type = "multiple",core_num = 1){
   ## func
   name2kegg <- function(c_name) {
     c_name_encode = URLencode(c_name)
@@ -25,12 +25,12 @@ mda_name2kegg <- function(query,type = "multiple",core_num = 8){
     res_kegg_name2cid = htmlParse(html_page) %>% getNodeSet(.,"//div") %>% xmlValue() 
     if(isTRUE(grepl(pattern = "Total 0 hits",x = res_kegg_name2cid[1]))) {
       out = data.frame(
-        Compound_name = c_name,
-        KEGG = NA
+        Compound_name = c_name %>% URLdecode(),
+        KEGG = ""
       )
     } else {
       out = data.frame(
-        Compound_name = c_name,
+        Compound_name = c_name %>% URLdecode(),
         KEGG = res_kegg_name2cid[2] %>% str_extract(.,"^C\\d++")
       )
     }
@@ -42,7 +42,7 @@ mda_name2kegg <- function(query,type = "multiple",core_num = 8){
   msg_no = red$bold$italic;
   msg_warning = yellow$bold$italic;
   message(msg_yes("Start analysis... \nConvert compound name to cid by KEGG website "))
-  input <- query %>% setNames("tag") %>% pull(tag)
+  input <- query %>% URLencode(reserved = TRUE,repeated = T)
   batch_name2cid.kegg = function(input){
     p <- progressr::progressor(steps = length(input));
     b = furrr::future_map_dfr(.x = input,.f = function(.x) {

@@ -4,7 +4,7 @@
 \alias{mda_CTS_kegg}
 \title{mda_CTS_kegg.}
 \usage{
-mda_CTS_kegg(query, type = "multiple", key = "InChIKey", core_num = 8)
+mda_CTS_kegg(query, type = "multiple", key = "InChIKey", core_num = 1)
 }
 \arguments{
 \item{query}{'character' or 'data.frame'; For single InChiKey, query equals the InChiKey, For multiple InChiKeys, query is a single column of input, InChIKey or name.}

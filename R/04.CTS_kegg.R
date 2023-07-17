@@ -20,7 +20,7 @@
 #' @importFrom crayon green bold italic red yellow
 #' @export
 
-mda_CTS_kegg = function(query,type = "multiple",key = "InChIKey",core_num = 8) {
+mda_CTS_kegg = function(query,type = "multiple",key = "InChIKey",core_num = 1) {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;
@@ -72,8 +72,7 @@ mda_CTS_kegg = function(query,type = "multiple",key = "InChIKey",core_num = 8) {
   }
 
   if (type == "multiple") {
-    input = query %>% setNames("tag") %>% 
-      mutate(tag = URLencode(tag,reserved = TRUE,repeated = T)) %>% 
+    input = data.frame(tag = query %>% URLencode(reserved = TRUE,repeated = T)) %>% 
       mutate(url = paste0(CTS_url,tag)) %>%
       filter(tag != "NA") %>% 
       select(url) %>% unique()

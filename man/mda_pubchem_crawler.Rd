@@ -4,7 +4,7 @@
 \alias{mda_pubchem_crawler}
 \title{mda_pubchem_crawler.}
 \usage{
-mda_pubchem_crawler(cid_info, type = "multiple", core_num = 8)
+mda_pubchem_crawler(cid_info, type = "multiple", core_num = 1)
 }
 \arguments{
 \item{cid_info}{'character' or 'data.frame'; For single cid, cid_info equals the pubchem CID, For multiple cid, cid_info is a dataframe generated from mda_get_cid.}

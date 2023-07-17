@@ -4,7 +4,7 @@
 \alias{mda_get_cid_fast}
 \title{mda_get_cid_fast.}
 \usage{
-mda_get_cid_fast(data_info, type = "multiple", core_num = 8)
+mda_get_cid_fast(data_info, type = "multiple", core_num = 1)
 }
 \arguments{
 \item{data_info}{A compound table input. Must have atleast two columns, 1st Compound_ID, 2nd CAS.ID or compound name.}

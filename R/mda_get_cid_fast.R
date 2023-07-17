@@ -30,7 +30,7 @@
 #' }
 #' 
 
-mda_get_cid_fast = function(data_info,type = "multiple",core_num = 8) {
+mda_get_cid_fast = function(data_info,type = "multiple",core_num = 1) {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;
@@ -108,3 +108,4 @@ mda_get_cid_fast = function(data_info,type = "multiple",core_num = 8) {
     return(cid_tbl)
   }
 }
+

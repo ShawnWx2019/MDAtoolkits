@@ -4,10 +4,10 @@
 \alias{mda_name2kegg}
 \title{MDA_name2kegg}
 \usage{
-mda_name2kegg(query, type = "multiple", core_num = 8)
+mda_name2kegg(query, type = "multiple", core_num = 1)
 }
 \arguments{
-\item{query}{'character' or 'data.frame'; For single InChiKey, query equals the InChiKey, For multiple InChiKeys, query is a single column of input, InChIKey or name.}
+\item{query}{'character' ; compound names.}
 
 \item{type}{"single','multiple';  For one compound or multiple compounds.}
 
