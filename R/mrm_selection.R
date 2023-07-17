@@ -55,10 +55,10 @@ mrm_selection_cd = function(x) {
   ##> calculate rsd
   judge_rsd <- 
     y %>% 
-    select(Sample,starts_with("QC"),-QC_mean) %>% 
+    select(Compound_id,starts_with("QC"),-QC_mean) %>% 
     pivot_longer(contains("QC"),names_to = 'tag',values_to = 'value') %>% 
     select(-tag) %>% 
-    group_by(Sample) %>% 
+    group_by(Compound_id) %>% 
     summarise(rsd = (sd(value,na.rm = T)/mean(value,na.rm = T))*100) %>% 
     filter(rsd <= 30)
   ##> remove features with rsd > 30
