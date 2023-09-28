@@ -4,12 +4,12 @@
 \alias{mda_get_cid_fast}
 \title{mda_get_cid_fast.}
 \usage{
-mda_get_cid_fast(data_info, type = "multiple", core_num = 1)
+mda_get_cid_fast(query, probe = "name", core_num = 1)
 }
 \arguments{
-\item{data_info}{A compound table input. Must have atleast two columns, 1st Compound_ID, 2nd CAS.ID or compound name.}
+\item{query}{A single compound name or multiple compounds}
 
-\item{type}{'multiple','single', For one compound or multiple compounds.}
+\item{probe}{'character', form of query, name or inchikey.}
 
 \item{core_num}{'numeric'; how many cores you want to use}
 }
@@ -27,7 +27,7 @@ xx <- read.csv("cd_result.csv")
 # data orgnazation
 orz_data = mda_data_org(compound_info = xx, source = "CD")
 # Get cid (batch)
-name2cid = mad_get_cid(data_info = orz_data)
+name2cid = mad_get_cid(query = orz_data)
 # please wait for a while
 }
 

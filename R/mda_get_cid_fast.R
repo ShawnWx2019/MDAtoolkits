@@ -2,8 +2,8 @@
 #' @description Data organization of input data.
 #' @author Shawn Wang <http://www.shawnlearnbioinfo.top>.
 #' \email{shawnwang2016@@126.com}
-#' @param data_info A compound table input. Must have atleast two columns, 1st Compound_ID, 2nd CAS.ID or compound name.
-#' @param type 'multiple','single', For one compound or multiple compounds.
+#' @param query A single compound name or multiple compounds
+#' @param probe 'character', form of query, name or inchikey.
 #' @param core_num 'numeric'; how many cores you want to use
 #' @return cid_tbl contains cid and InChIKey.
 #' @importFrom magrittr %>%
@@ -25,12 +25,12 @@
 #' # data orgnazation
 #' orz_data = mda_data_org(compound_info = xx, source = "CD")
 #' # Get cid (batch)
-#' name2cid = mad_get_cid(data_info = orz_data)
+#' name2cid = mad_get_cid(query = orz_data)
 #' # please wait for a while
 #' }
 #' 
 
-mda_get_cid_fast = function(data_info,type = "multiple",core_num = 1) {
+mda_get_cid_fast = function(query,probe = "name",core_num = 1) {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;
@@ -40,21 +40,25 @@ mda_get_cid_fast = function(data_info,type = "multiple",core_num = 1) {
   #> name2cid
   name2cid_fun = function(x) {
     cid_tbl = tibble(
-      query = x,
+      query = x %>% URLdecode(),
       cid = NA,
+      formula = NA,
+      mw = NA,
       InChIKey = NA
     )
     tryCatch(
       {
-        url = paste0("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/",
-                     x, "/property/InChiKey/json")
+        url = paste0("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/",probe,"/",
+                     x, "/property/MolecularFormula,InChIKey,MolecularWeight/json")
         response <- getURL(url)
         tmp = fromJSON(response)
         tmp2 = tmp$PropertyTable$Properties
         cid_tbl = data.frame(
-          query = x,
+          query = x %>% URLdecode(),
           cid = tmp2[1,1],
-          InChIKey = tmp2[1,2]
+          formula = tmp2[1,2],
+          mw = tmp2[1,3],
+          InChIKey = tmp2[1,4]
         )
         
       },error = function(e) {
@@ -64,8 +68,8 @@ mda_get_cid_fast = function(data_info,type = "multiple",core_num = 1) {
     return(cid_tbl)
   }
   #> multicore webspider
-  multi_get_cid_fun = function(name_list) {
-    x <- name_list %>% pull(query)
+  multi_get_cid_fun = function(x) {
+    x <- x 
     p <- progressr::progressor(along = x);
     round_n = length(x);
     b = furrr::future_map2_dfr(.x = x,.y = c(1:round_n),.f = function(.x,.y) {
@@ -79,33 +83,14 @@ mda_get_cid_fast = function(data_info,type = "multiple",core_num = 1) {
     b <- b %>% filter(!is.na(cid))
     return(b)
   }
-  #> run single search
-  if(type == 'single') {
-    cid_tbl <- name2cid_fun(
-      x = data_info
-    )
-    message(msg_yes("Done!"))
-  }
-  #> run multiple search
-  if(type == 'multiple') {
-    #> check format
-    if ("query" %in% colnames(data_info) ) {
-      Name_clean = data_info %>% 
-        select(query) %>% 
-        distinct() %>% 
-        drop_na() %>% 
-        mutate(order = seq(1:nrow(.)))
-    } else {
-      return();
-      message(msg_no('Error in input data infomation, please make sure the column name of compound name or CAS.ID are "query"!'))
-    } 
-    #> run
-    future::plan("multisession", workers = core_num)
-    with_progress({
-      cid_tbl = multi_get_cid_fun(name_list = Name_clean)
-    })
-    message(msg_yes("Done!"))
-    return(cid_tbl)
-  }
+  #> check format
+  Name_clean = URLencode(query)
+  #> run
+  future::plan("multisession", workers = core_num)
+  with_progress({
+    cid_tbl = multi_get_cid_fun(x = Name_clean)
+  })
+  message(msg_yes("Done!"))
+  return(cid_tbl)
 }
 
