@@ -41,6 +41,6 @@ StagedInstall: no
 Depends: 
     R (>= 3.10)
 Remotes:
-    ropls: https://github.com/SamGG/ropls,
-    PCAtools: https://github.com/kevinblighe/PCAtools,
-    tidymass: https://gitlab.com/jaspershen/tidymass
+    github::SamGG/ropls,
+    github::kevinblighe/PCAtools,
+    gitlab::jaspershen/tidymass
