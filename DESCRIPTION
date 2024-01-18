@@ -33,9 +33,14 @@ Imports:
     dplyr,
     PCAtools,
     ropls,
+    tidymass
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 StagedInstall: no
 Depends: 
     R (>= 3.10)
+Remotes:
+    ropls: https://github.com/SamGG/ropls
+    PCAtools: https://github.com/kevinblighe/PCAtools
+    tidymass: https://gitlab.com/jaspershen/tidymass
