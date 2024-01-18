@@ -10,7 +10,6 @@
 #' @importFrom progressr progressor handlers with_progress
 #' @importFrom purrr map2_dfr
 #' @importFrom crayon green bold italic red yellow
-#' @references See 
 #' @export
 #' @examples  
 #' \dontrun{
@@ -94,7 +93,6 @@ mrm_selection_cd = function(x) {
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate relocate left_join group_by arrange filter slice_head rename
 #' @importFrom purrr map2_dfr
-#' @references 
 
 
 extract_fragment <- function(ms2_data,vari_id,spec_id) {
@@ -138,7 +136,6 @@ extract_fragment <- function(ms2_data,vari_id,spec_id) {
 #' @importFrom massdataset activate_mass_dataset extract_ms2_data
 #' @importFrom tidyr drop_na
 #' @importFrom purrr map2_dfr
-#' @references 
 #' @export
 
 oneStepMRMselection <- function(obj_ms2){

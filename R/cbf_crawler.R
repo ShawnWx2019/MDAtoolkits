@@ -4,6 +4,7 @@
 #' \email{shawnwang2016@@126.com}
 #' @param query 'character', "A vector consisting of one or more InChIKeys. 
 #' @param delay_max 'number', "crawl delay time, defult = 1, To prevent excessive load on the website, we set the minimum value of the crawl delay to 0.5 seconds, and the maximum value represents a random variation in the crawl delay within the range of 0.5 seconds to that value.
+#' @param ssl.verifypeer 'logic', see RCurl::getURL, default is TRUE.
 #' @return A dataframe, contains InChIKey, kingdom, superclass, class, subclass parent_levels and description.
 #' @importFrom magrittr %>%
 #' @importFrom RCurl getURL
@@ -28,7 +29,7 @@
 #' # run cbf_crawler
 #' classyfire_tbl = cbf_crawler(query = xx, delay_max = 2)
 #' }
-cbf_crawler <- function(query,delay_max = 1) {
+cbf_crawler <- function(query,delay_max = 1,ssl.verifypeer = TRUE) {
   #> message setting
   msg_yes = green$bold$italic;
   msg_no = red$bold$italic;
@@ -40,7 +41,7 @@ cbf_crawler <- function(query,delay_max = 1) {
     InChIKey.raw <- InChIKey
     url_raw = "https://cfb.fiehnlab.ucdavis.edu/entities/"
     url = paste0(url_raw,InChIKey,".json")
-    xx <- RCurl::getURL(url = url)
+    xx <- RCurl::getURL(url = url,ssl.verifypeer = ssl.verifypeer)
     #> transfer josn to dataframe, but the result is, all elements were stored at a list.
     xxx <- jsonlite::fromJSON(xx,simplifyDataFrame = T) 
     #> assignment variables.

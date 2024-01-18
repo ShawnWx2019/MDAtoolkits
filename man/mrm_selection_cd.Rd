@@ -23,9 +23,6 @@ x = readxl::read_xlsx("~/GeekCloud/TTQC.xlsx",sheet = 2)
 out <- mrm_selection_cd(x = x)
 }
 }
-\references{
-See
-}
 \author{
 Shawn Wang <http://www.shawnlearnbioinfo.top>.
 \email{shawnwang2016@126.com}

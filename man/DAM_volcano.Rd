@@ -27,7 +27,7 @@ DAM_volcano(
 \item{VIP_cut}{'numeric'; VIP cutoff, default = 1}
 }
 \value{
-pubchem_item An data frame about stored the pubchem information of input cids.
+ggplot2 object
 }
 \description{
 volcano plot for DAM analysis result.
@@ -44,9 +44,6 @@ right = "control"
 res_dm <- DM_analysis(x = mat,left_index,right_index,left,right)
 }
 DAM_volcano(x = res_dm$Diff_result_clean)
-}
-\references{
-See webchem https://github.com/ropensci/webchem.
 }
 \author{
 Shawn Wang <http://www.shawnlearnbioinfo.top>.

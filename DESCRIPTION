@@ -1,6 +1,6 @@
 Package: MDAtoolkits
 Title: MDAtoolkits
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Shawn",
            family = "Wang",
@@ -17,8 +17,6 @@ Imports:
     ggplot2,
     jsonlite,
     crayon,
-    webchem,
-    classyfireR,
     tidyverse,
     rlang,
     curl,

@@ -10,14 +10,13 @@
 #' @param qval_cut 'numeric'; FDR / adj.p or qvalue cutoff, default = 0.05 
 #' @param log2fc_cut 'numeric'; log2fc cutoff, default = 1 
 #' @param VIP_cut 'numeric'; VIP cutoff, default = 1 
-#' @return pubchem_item An data frame about stored the pubchem information of input cids.
+#' @return ggplot2 object
 #' @import ggplot2
 #' @importFrom dplyr mutate case_when
 #' @importFrom magrittr %>%
 #' @importFrom future plan
 #' @importFrom furrr future_map_dfr
 #' @importFrom crayon green bold italic red yellow
-#' @references See webchem https://github.com/ropensci/webchem.
 #' @export
 #' @examples  
 #' \dontrun{

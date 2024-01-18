@@ -4,12 +4,14 @@
 \alias{cbf_crawler}
 \title{cbf_crawler}
 \usage{
-cbf_crawler(query, delay_max = 1)
+cbf_crawler(query, delay_max = 1, ssl.verifypeer = TRUE)
 }
 \arguments{
 \item{query}{'character', "A vector consisting of one or more InChIKeys.}
 
 \item{delay_max}{'number', "crawl delay time, defult = 1, To prevent excessive load on the website, we set the minimum value of the crawl delay to 0.5 seconds, and the maximum value represents a random variation in the crawl delay within the range of 0.5 seconds to that value.}
+
+\item{ssl.verifypeer}{'logic', see RCurl::getURL, default is TRUE.}
 }
 \value{
 A dataframe, contains InChIKey, kingdom, superclass, class, subclass parent_levels and description.
