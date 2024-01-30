@@ -144,7 +144,7 @@ oneStepMRMselection <- function(obj_ms2){
   ms2_data <- x$MS2@ms2_spectra
   vari_id <- x$MS2@variable_id
   spec_id <- x$MS2@ms2_spectrum_id
-    if(length(ms2_data != length(spec_id) {
+    if(length(ms2_data) != length(spec_id)) {
       ms2_data = unique(ms2_data)
       }
   res_mrm <- extract_fragment(ms2_data = ms2_data,vari_id = vari_id,spec_id = spec_id)
