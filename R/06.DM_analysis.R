@@ -34,20 +34,27 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
   msg_warning = yellow$bold$italic
   l_num = length(left_index);
   r_num = length(right_index)
+
+  if(l_num > 10000 | l_num > 10000) {
+    message(msg_no("emmmm.... are you sure you have more than 10,000 biological replicates!? "))
+    q(status = 1)
+  }
+
   if(l_num < 2 | r_num < 2) {
     message(msg_no(paste0("ERROR: ",left," or ",right," has only one biological repeat. It is not possible to do pairwised t-test! \nplease remove the corresponding samples from both peak file and group file.")))
     q(status = 1)
   } 
+
   mat = x %>% 
     column_to_rownames("CompoundID") %>% 
     select(all_of(left_index),all_of(right_index)) %>% 
     distinct()
-  colnames(mat) = c(paste0("left","_",str_pad(c(1:l_num), 3,side = "left", "0")),
-                    paste0("right","_",str_pad(c(1:r_num), 3,side = "left", "0")))
+  colnames(mat) = c(paste0("left","_",str_pad(c(1:l_num), 4,side = "left", "0")),
+                    paste0("right","_",str_pad(c(1:r_num), 4,side = "left", "0")))
   mean_mat = mat %>% 
     rownames_to_column("CompoundID") %>% 
     pivot_longer(!CompoundID,names_to = "Sample",values_to = "Peak") %>% 
-    mutate(Sample = gsub("....$","",Sample)) %>% 
+    mutate(Sample = str_split(Sample,"_",2,T)[,1]) %>% 
     group_by(CompoundID,Sample) %>% 
     summarise(mean = mean(Peak),.groups = "drop_last") %>% 
     pivot_wider(names_from = Sample,values_from = mean)
@@ -57,7 +64,7 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
     mat %>%
       rownames_to_column("CompoundID") %>%
       pivot_longer(!CompoundID,names_to = "Sample",values_to = "Peak") %>%
-      mutate(Sample = gsub("....$","",Sample)) %>%
+    mutate(Sample = str_split(Sample,"_",2,T)[,1]) %>% 
       group_by(CompoundID) %>%
       t_test(Peak ~ Sample,detailed = TRUE) %>% 
       dplyr::select(CompoundID,p)-> Diff_result_all
@@ -65,7 +72,7 @@ DM_analysis = function(x,left_index,right_index,left,right,method='t-test',metho
     mat %>%
       rownames_to_column("CompoundID") %>%
       pivot_longer(!CompoundID,names_to = "Sample",values_to = "Peak") %>%
-      mutate(Sample = gsub("....$","",Sample)) %>%
+    mutate(Sample = str_split(Sample,"_",2,T)[,1]) %>% 
       group_by(CompoundID) %>%
       anova_test(Peak ~ Sample,detailed = TRUE) %>% as.data.frame() %>% 
       dplyr::select(CompoundID,p)-> Diff_result_all
