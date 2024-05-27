@@ -56,7 +56,7 @@ mda_get_cid_fast = function(query,probe = "name",core_num = 1) {
         cid_tbl = data.frame(
           query = x %>% URLdecode(),
           cid = tmp2[1,1],
-          formula = tmp2[1,2],
+          Formula = tmp2[1,2],
           mw = tmp2[1,3],
           InChIKey = tmp2[1,4]
         )

@@ -60,3 +60,20 @@
 #' \email{shawnwang2016@@126.com}
 #' @format A databaseClass object.
 "knapsack_agri_database0.0.1"
+
+##------------------------------------------------------------------------------
+#' @title metaboBASE database 1.0.0
+#' @description metaboBASE database 1.0.0
+#' @author Shawn Wang
+#' \email{shawnwang2016@@126.com}
+#' @format A databaseClass object.
+"metabobase_database0.0.1"
+
+
+##------------------------------------------------------------------------------
+#' @title pm Database classyFire 0.0.1
+#' @description in-build pmDatabse classyFire
+#' @author Shawn Wang
+#' \email{shawnwang2016@@126.com}
+#' @format A databaseClass object.
+"class.database"

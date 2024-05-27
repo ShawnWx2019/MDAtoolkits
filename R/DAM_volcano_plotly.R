@@ -49,9 +49,11 @@ DAM_volcano_plotly <- function(x, title, pval_cut = 0.05, log2fc_cut = 1, qval_c
   if (qval_cut <= pval_cut) {
     yaxis <- vocdata$log10qval
     ylab <- "log10(Q-value)"
+    yline <- -log10(qval_cut)
   } else {
     yaxis <- vocdata$log10pval
     ylab <- "log10(P-value)"
+    yline = -log10(pval_cut)
   }
   
   # 使用 plotly 绘图
@@ -66,7 +68,7 @@ DAM_volcano_plotly <- function(x, title, pval_cut = 0.05, log2fc_cut = 1, qval_c
            hovermode = 'closest')
   
   # 添加线条
-  p= p %>% add_lines(x = c(x.min,x.max),y = 3,inherit = F,line = list(color = "black", width = 1.5, dash = 'dash')) %>%
+  p= p %>% add_lines(x = c(x.min,x.max),y = yline,inherit = F,line = list(color = "black", width = 1.5, dash = 'dash')) %>%
     add_lines(x = log2fc_cut,y = c(0,max(yaxis)),inherit = F,line = list(color = "black", width = 1.5, dash = 'dash')) %>%
     add_lines(x = -log2fc_cut,y = c(0,max(yaxis)),inherit = F,line = list(color = "black", width = 1.5, dash = 'dash'))
   

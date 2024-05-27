@@ -25,13 +25,13 @@ mda_name2kegg <- function(query,type = "multiple",core_num = 1){
     res_kegg_name2cid = htmlParse(html_page) %>% getNodeSet(.,"//div") %>% xmlValue() 
     if(isTRUE(grepl(pattern = "Total 0 hits",x = res_kegg_name2cid[1]))) {
       out = data.frame(
-        Compound_name = c_name %>% URLdecode(),
-        KEGG = ""
+        Compound.name = c_name %>% URLdecode(),
+        KEGG.ID = ""
       )
     } else {
       out = data.frame(
-        Compound_name = c_name %>% URLdecode(),
-        KEGG = res_kegg_name2cid[2] %>% str_extract(.,"^C\\d++")
+        Compound.name = c_name %>% URLdecode(),
+        KEGG.ID = res_kegg_name2cid[2] %>% str_extract(.,"^C\\d++")
       )
     }
     return(out)

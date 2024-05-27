@@ -30,21 +30,32 @@
 #' }
 #' DAM_volcano(x = res_dm$Diff_result_clean)
 DAM_volcano = function(x,title,pval_cut = 0.05,log2fc_cut = 1,qval_cut = 0.05, VIP_cut = 1){
-  x %>%
-    mutate(group = case_when(
-      pvalue <= pval_cut & VIP >= VIP_cut & log2fc > log2fc_cut & FDR <= qval_cut ~ "up",
-      pvalue <= pval_cut & VIP >= VIP_cut & log2fc < -log2fc_cut & FDR <= qval_cut~ "down",
-      TRUE ~ "not significant"
-    ),
-    log10pval = -log10(pvalue),
-    log10qval = -log10(FDR)
-    )-> vocdata
-  if(max(vocdata$log2fc,na.rm = T) == Inf) {x.max = 10} else {x.max = max(vocdata$log2fc,na.rm = T) }
+  vocdata <- 
+    x %>%
+      mutate(group = case_when(
+        pvalue <= pval_cut & VIP >= VIP_cut & log2fc > log2fc_cut & FDR <= qval_cut ~ "up",
+        pvalue <= pval_cut & VIP >= VIP_cut & log2fc < -log2fc_cut & FDR <= qval_cut~ "down",
+        TRUE ~ "not significant"
+      ),
+      log10pval = -log10(pvalue),
+      log10qval = -log10(FDR)
+      )
+    
+  if(max(vocdata$log2fc,na.rm = T) == Inf) {
+    x.max = 10
+  } else {
+    x.max = max(vocdata$log2fc,na.rm = T)
+  }
+  
+  
+  
   p_pval = ggplot(data = vocdata,aes(x = log2fc,y = log10pval))+
     geom_point(aes(color = group,size = VIP))
   p_qval = ggplot(data = vocdata,aes(x = log2fc,y = log10qval))+
     geom_point(aes(color = group,size = VIP))
-  if(qval_cut <= pval_cut) {yinter = qval_cut;ylab_tag = expression(paste(-log10,("q-value")));p = p_qval} else {yinter = pval_cut;ylab_tag = expression(paste(-log10,("p-value")));p = p_qval}
+  
+  if(qval_cut <= pval_cut) {yinter = -log10(qval_cut);ylab_tag = expression(paste(-log10,("q-value")));p = p_qval} else {yinter = -log10(pval_cut);ylab_tag = expression(paste(-log10,("p-value")));p = p_qval}
+  
   p = p +
     scale_color_manual(values = c("blue","grey","red"))+
     scale_size(range = c(0.05,1))+

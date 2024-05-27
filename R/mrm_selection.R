@@ -157,7 +157,6 @@ oneStepMRMselection <- function(obj_ms2){
     obj_ms2 %>% activate_mass_dataset('variable_info') %>%
     left_join(ms2_tag,by = 'variable_id') %>% 
     filter(MS2_info == 'yes') %>% 
-    left_join(res_mrm,by = 'variable_id') %>% 
-    drop_na()
+    left_join(res_mrm,by = 'variable_id')
   return(object_new)
 }
