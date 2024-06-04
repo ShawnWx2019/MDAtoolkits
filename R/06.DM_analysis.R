@@ -154,7 +154,7 @@ DAM_analysis = function(x,left_index,right_index,left,right,
           y = data.frame(
             row.names = colnames(mat),
             group = rep(c(left,right),times = c(l_num,r_num))
-          ) %>% as.matrix(),
+          ) %>% as.matrix(),printL = FALSE, plotL = FALSE,
           crossvalI = crossv)
       } else if (method2 == "opls-da") {
         tmp_x = tryCatch({
@@ -165,7 +165,7 @@ DAM_analysis = function(x,left_index,right_index,left,right,
               group = rep(c(left,right),times = c(l_num,r_num))
             ) %>% as.matrix(),
             orthoI = NA,
-            predI = 1,
+            predI = 1,printL = FALSE, plotL = FALSE,
             crossvalI = crossv
           )
         },error = function(e) {
@@ -176,8 +176,8 @@ DAM_analysis = function(x,left_index,right_index,left,right,
               group = rep(c(left,right),times = c(l_num,r_num))
             ) %>% as.matrix(),
             orthoI = 1,
-            predI = 1,
-            crossvalI = crossv
+            predI = 1,printL = FALSE, plotL = FALSE,
+            crossvalI = crossv,
           )
         })
       }

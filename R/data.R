@@ -69,6 +69,13 @@
 #' @format A databaseClass object.
 "metabobase_database0.0.1"
 
+##------------------------------------------------------------------------------
+#' @title orbitrap_database0.0.3
+#' @description orbitrap_database0.0.3
+#' @author Xiaotao Shen
+#' \email{shenxt1990@@163.com}
+#' @format A databaseClass object.
+"orbitrap_database0.0.3"
 
 ##------------------------------------------------------------------------------
 #' @title pm Database classyFire 0.0.1
