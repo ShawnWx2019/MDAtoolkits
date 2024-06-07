@@ -12,10 +12,11 @@
 #' @importFrom RCurl getURL
 #' @importFrom jsonlite fromJSON
 #' @importFrom future plan
-#' @importFrom progressr  progressor
+#' @importFrom progressr progressor
 #' @importFrom furrr future_map2_dfr
 #' @importFrom purrr map_df map2_df
 #' @importFrom crayon green bold italic red yellow
+#' @importFrom tibble tibble
 #' @references See webchem https://github.com/ropensci/webchem
 #' @export
 #' @examples  
