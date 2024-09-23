@@ -1,12 +1,12 @@
 Package: MDAtoolkits
 Title: MDAtoolkits
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Shawn",
            family = "Wang",
            role = c("aut", "cre"),
            email = "shawnwang2016@126.com")
-Description: A shiny app for downstream metabolic data analysis.
+Description: functions for metabolomics downstream analysis.
 License: MIT
 Imports: 
     config (>= 0.3.1),
@@ -31,7 +31,6 @@ Imports:
     magrittr,
     tidyr,
     dplyr,
-    PCAtools,
     ropls,
     tidymass
 Encoding: UTF-8
@@ -42,5 +41,4 @@ Depends:
     R (>= 3.10)
 Remotes:
     github::SamGG/ropls,
-    github::kevinblighe/PCAtools,
     gitlab::jaspershen/tidymass
