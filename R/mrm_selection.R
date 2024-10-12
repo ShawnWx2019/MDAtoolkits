@@ -96,11 +96,18 @@ mrm_selection_cd = function(x) {
 
 
 extract_fragment <- function(ms2_data,vari_id,spec_id) {
+  
   var2spec = data.frame(
     variable_id = vari_id,
     ms2_spectrum_id = spec_id
+  ) 
+  
+  ms2_data_name = data.frame(
+    ms2_spectrum_id = names(ms2_data)
   )
-  out = map2_dfr(.x = spec_id,.y = ms2_data,.f = function(.x,.y) {
+  ms2_data_clean = ms2_data[var2spec$ms2_spectrum_id]
+  
+  out = map2_dfr(.x = spec_id,.y = ms2_data_clean,.f = function(.x,.y) {
     MS2_df <-
       .y %>% 
       as.data.frame() %>% 
@@ -120,8 +127,8 @@ extract_fragment <- function(ms2_data,vari_id,spec_id) {
            gap = precursor - mz) %>% 
     filter(gap > 15) %>% # add tags to fragments which have mz gap with precursor ions larger than 15
     slice_head(n = 1) %>% # save the 1st fragment as the product ion
-    rename('product' = "mz") %>% 
-    select(variable_id,ms2_spectrum_id,precursor,product)
+    dplyr::rename('product' = "mz") %>% 
+    dplyr::select(variable_id,ms2_spectrum_id,precursor,product)
   return(mrm_out)
 }
 
@@ -144,9 +151,7 @@ oneStepMRMselection <- function(obj_ms2){
   ms2_data <- x$MS2@ms2_spectra
   vari_id <- x$MS2@variable_id
   spec_id <- x$MS2@ms2_spectrum_id
-    if(length(ms2_data) != length(spec_id)) {
-      ms2_data = unique(ms2_data)
-      }
+  
   res_mrm <- extract_fragment(ms2_data = ms2_data,vari_id = vari_id,spec_id = spec_id)
   
   ms2_tag <- data.frame(
