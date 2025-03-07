@@ -50,7 +50,7 @@ mda_get_cid_fast = function(query,probe = "name",core_num = 1) {
     tryCatch(
       {
         url = paste0("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/",probe,"/",
-                     x, "/property/MolecularFormula,InChIKey,MolecularWeight/json")
+                     x, "/property/MolecularFormula,InChIKey,MonoisotopicMass/json")
         response <- getURL(url)
         tmp = fromJSON(response)
         tmp2 = tmp$PropertyTable$Properties
